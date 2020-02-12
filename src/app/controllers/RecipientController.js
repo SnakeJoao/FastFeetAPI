@@ -19,7 +19,7 @@ class RecipientController {
     }
 
     const recipientExists = await Recipient.findOne({
-      where: { destinatary_name: req.body.destinatary_name },
+      where: { destinatary: req.body.destinatary },
     });
 
     if (recipientExists) {
