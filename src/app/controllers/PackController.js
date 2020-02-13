@@ -5,6 +5,9 @@ import Recipient from '../models/Recipient';
 import Deliveryman from '../models/Deliveryman';
 import File from '../models/File';
 
+import PackDetailsMail from '../jobs/PackDetailsMail';
+import Queue from '../../lib/Queue';
+
 class PackController {
   async index(req, res) {
     const packs = await Pack.findAll({
@@ -78,6 +81,12 @@ class PackController {
     }
 
     const createPack = await Pack.create(req.body);
+
+    await Queue.add(PackDetailsMail.key, {
+      deliverymanExist,
+      createPack,
+      recipientExist,
+    });
 
     return res.json(createPack);
   }
