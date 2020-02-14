@@ -18,7 +18,7 @@ class PackController {
         'signature_id',
         'product',
         'canceled_at',
-        'start_date',
+        'initial_date',
         'end_date',
       ],
       include: [
@@ -94,21 +94,21 @@ class PackController {
   async update(req, res) {
     const { id } = req.params;
 
-    const searchPack = await Pack.findByPk(id);
-
-    if (!searchPack) {
-      return res.status(404).json({ error: 'Pack not found' });
-    }
-
     const schema = Yup.object().shape({
       recipient_id: Yup.number(),
       deliveryman_id: Yup.number(),
       signature_id: Yup.number(),
       product: Yup.string(),
       canceled_at: Yup.date(),
-      start_date: Yup.date(),
+      initial_date: Yup.date(),
       end_date: Yup.date(),
     });
+
+    const searchPack = await Pack.findByPk(id);
+
+    if (!searchPack) {
+      return res.status(404).json({ error: 'Pack not found' });
+    }
 
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
